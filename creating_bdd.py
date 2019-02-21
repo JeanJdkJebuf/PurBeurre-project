@@ -4,20 +4,22 @@
 
 # import mods and files
 import pymysql
+import requests
 from conf import *
 
-class Basedata (object):
+
+class BaseData (object):
     "user as mysql user@'localhost', passw as mysql password"
-    def __init__(self, user='', passw=''):
+    def __init__(self, user, passw):
         # defining default data
-        self.user =user
-        self.passw =passw
-        #creating client data
-        self.connection = pymysql.connect(host='localhost', \
-                             user= self.user, \
-                             password= self.passw, \
-                             charset='utf8', \
-                             cursorclass=pymysql.cursors.DictCursor)
+        self.user = user
+        self.passw = passw
+        # creating client data
+        self.connection = pymysql.connect(host='localhost',
+                                user=self.user, \
+                                password=self.passw, \
+                                charset='utf8', \
+                                cursorclass=pymysql.cursors.DictCursor)
 
     # creating function that is going to create bdd for this project
     def create_database(self):
@@ -80,10 +82,33 @@ class Basedata (object):
             pass
 
         # this function picks data from openfoodfact.org and puts it into var.
-        def add_data(self):
+    def adding_data(self):
+        "this function takes some data from a website and\
+        puts it into database"
             
+        # mark for products
+        t = 0
+        # each category will be implemented
+        for x in range(len(CATEGORIES)):
+            with self.connection.cursor() as cursor:
+                cursor.execute(INSERT_REQ_CATEGORY.format(x+1, CATEGORIES[x]))
+                self.connection.commit()
+#                   r=requests.get(SITE.format(categories[x])).json()
+#                   try:
+#                       data_product=[r["products"][t]["_id"], \
+#                       r["products"][t]["product_name_fr"], \
+#                       r["products"][t]["ingredients_text_debug"], \
+#                       r["products"][t]["url"], \
+#                       r["products"][t]["purchase_places"],
+#                       r["products"][t]["allergens"], \
+#                       r["products"][t]["nutrition_grades"]]
+#                       t+=1
+#                   except:
+#                       pass
+#
         
 #test
 if __name__ == '__main__' :
-    bd= Basedata(username, password)
+    bd= BaseData(USERNAME, PASSWORD)
     bd.create_database()
+    bd.adding_data()
