@@ -89,10 +89,10 @@ class BaseData (object):
         "this function takes some data from a website and\
         puts it into database"
 
-        #comparing products
-        compar=[]    
+        # comparing products
+        compar = []    
         # mark for products
-        x= 0
+        x = 0
         # each category will be implemented
         for x in range(len(CATEGORIES)):
             with self.connection.cursor() as cursor:
@@ -124,16 +124,16 @@ class BaseData (object):
                             t+=1
                             
                         else:
-                            t+=1
+                            t += 1
                             continue
                     except:
                         if t == 1000:
-                            y=1
+                            y = 1
                             break
                         else:
-                            t+=1
+                            t += 1
     
-                #putting collected data in database
+                # putting collected data in database
                 print("Data loading... pass level {}".format(x+1))
                 cursor.execute(INSERT_REQ_PRODUCTS.format(','.join(str(v) for v in data_product))+";")
                 self.connection.commit()
@@ -143,3 +143,4 @@ if __name__ == '__main__':
     bd = BaseData(USERNAME, PASSWORD)
     bd.create_database()
     bd.adding_data()
+    
