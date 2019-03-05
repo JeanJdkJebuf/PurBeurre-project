@@ -50,7 +50,7 @@ class BaseData (object):
                 cursor.execute("""CREATE TABLE IF NOT EXISTS `comparatif_alimentaire`.`Products` (
                 `id_products` BIGINT UNSIGNED NOT NULL,
                 `product_name` VARCHAR(150) NOT NULL,
-                `ingredients` TEXT(1900) NULL,
+                `ingredients` TEXT NULL,
                 `url_ingredient` VARCHAR(250) NOT NULL,
                 `markets_for_product` VARCHAR(90) NULL,
                 `allergens` VARCHAR(255) NULL,
@@ -61,7 +61,7 @@ class BaseData (object):
                 CONSTRAINT `fk_category_id`
                   FOREIGN KEY (`category_id`)
                   REFERENCES `comparatif_alimentaire`.`Categories` (`id_categories`)
-                  ON DELETE NO ACTION
+                  ON DELETE CASCADE
                   ON UPDATE NO ACTION)
                 ENGINE = InnoDB;""")
             
@@ -75,7 +75,7 @@ class BaseData (object):
                 CONSTRAINT `fk_product_id`
                   FOREIGN KEY (`id_link_product`)
                   REFERENCES `comparatif_alimentaire`.`Products` (`id_products`)
-                  ON DELETE NO ACTION
+                  ON DELETE CASCADE
                   ON UPDATE NO ACTION)
                 ENGINE = InnoDB;""")
             
@@ -105,10 +105,10 @@ class BaseData (object):
                 r=requests.get(SITE.format(CATEGORIES[x])).json()
                 
                 #mark for each product
-                t, y = 0, 0
+                t, y = 0, 1
                 data_product = []
                 # creating loop to collect specific datas
-                while not y :
+                while y:
                     try:
                         if r["products"][t]["_id"] not in compar \
                             and len(r["products"][t]["allergens"]) < 255:
@@ -122,25 +122,30 @@ class BaseData (object):
                             r["products"][t]["nutrition_grades"], 
                             x+1))
                             t+=1
-                            
+                        # If product doesn't match if case
                         else:
                             t += 1
                             continue
                     except:
+                        # For all exceptions, we look for the next product
+                        t += 1
+                    finally:
+                        # When all keys are watched
                         if t == 1000:
-                            y = 1
+                            y = 0
                             break
-                        else:
-                            t += 1
     
                 # putting collected data in database
                 print("Data loading... pass level {}".format(x+1))
                 cursor.execute(INSERT_REQ_PRODUCTS.format(','.join(str(v) for v in data_product))+";")
-                self.connection.commit()
-      
+            self.connection.commit()
+
 # test
 if __name__ == '__main__':
     bd = BaseData(USERNAME, PASSWORD)
-    bd.create_database()
-    bd.adding_data()
-    
+    try:
+        bd.create_database()
+        bd.adding_data()
+    finally:
+        bd.connection.close()
+  

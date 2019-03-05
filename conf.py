@@ -28,3 +28,6 @@ INSERT_REQ_CATEGORY = ("INSERT INTO Categories VALUES({}, {})")
 # insert products request
 INSERT_REQ_PRODUCTS = ("INSERT INTO Products VALUES {}")
 
+# mysql research for choose_product(self, parent, category_number) function
+PRODUCT_SEARCH = ("SELECT product_name \
+ FROM Products WHERE category_id={};")
