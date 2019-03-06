@@ -134,7 +134,7 @@ class BaseData (object):
                         if t == 1000:
                             y = 0
                             break
-    
+
                 # putting collected data in database
                 print("Data loading... pass level {}".format(x+1))
                 cursor.execute(INSERT_REQ_PRODUCTS.format(','.join(str(v) for v in data_product))+";")
@@ -148,4 +148,3 @@ if __name__ == '__main__':
         bd.adding_data()
     finally:
         bd.connection.close()
-  

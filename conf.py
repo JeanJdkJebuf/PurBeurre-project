@@ -29,5 +29,11 @@ INSERT_REQ_CATEGORY = ("INSERT INTO Categories VALUES({}, {})")
 INSERT_REQ_PRODUCTS = ("INSERT INTO Products VALUES {}")
 
 # mysql research for choose_product(self, parent, category_number) function
-PRODUCT_SEARCH = ("SELECT product_name \
- FROM Products WHERE category_id={};")
+PRODUCT_SEARCH = ("SELECT id_products, product_name, ingredients, \
+url_ingredient, markets_for_product, allergens, nutrition_grades \
+FROM Products WHERE category_id={}")
+
+# this list displays informations regarding showing_product(),
+# a function for the class Menu_graphic()
+DISPLAY_INFO = ["Product name", "Ingredients", \
+"Website link", "Market place", "allergens"]

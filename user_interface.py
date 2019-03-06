@@ -103,26 +103,94 @@ class Menu_Graphic(Frame):
         self.cur.execute(PRODUCT_SEARCH.format(category_number))
         self.list_products=[]
         for row in self.cur:
-            self.list_products.append(''.join(row))
-        print(self.list_products[0])
-
+            self.list_products.append(row)
+        
+        #function to creates 10 products
         self.creating_prod_button(self.parent,self.product_marker)
+        #function that creates next and previous buttons
+        self.button_next(self.parent)
 
     # this function creates Buttons of certain products (x to x+10)
     def creating_prod_button(self, parent, prod_mark):
         """this function creates Buttons from prod_mark
         to prod_mark+10 used for function choose_product"""
 
+        # forced to do it here, because of next and previous buttons
+        # creating products only, requirement for 
+        # creating buttons naimed after them
+        self.list_prod_name=[]
+        for x in range(len(self.list_products)):
+            self.list_prod_name.append(self.list_products[x][1])
+
+        #marker for buttons rows
+        t=0
         # loop creating product buttons
         for x in range(prod_mark, prod_mark+10):
-            self.list_products[x]=Button(self, \
-            text=self.list_products[x], command=self.quit, \
-            height=3, width=15)
-            self.list_products[x].grid(column=0, row=x+1, sticky=W+E+N+S)
-        
+            #converting product name and number into var
+            var_number=self.list_products[x]
+            #creating buttons
+            self.list_prod_name[x]=Button(self, text=self.list_prod_name[x],\
+            command=partial(self.showing_product, \
+            self.parent, var_number), height=3, width=15)
+            self.list_prod_name[x].grid(column=0, row=t, sticky=W+E+N+S)
+            # increasing marker
+            t += 1
+    
+    #this button once clicked will show 10 next results
+    def button_next(self, parent):
+        """This buttons will show 10 next or previous
+        results if possible"""
+
+        #testing if button next can be pressed
+        def test_sup(number):
+            if self.product_marker+number in range(len(self.list_products)):
+                #removing previous widgets
+                for x in range(self.product_marker, self.product_marker+10):
+                    self.list_prod_name[x].destroy()
+                #updating self.product_marker
+                self.product_marker += number
+                #creating new widgets
+                self.creating_prod_button(self.parent,self.product_marker)
+
+        self.but_next=Button(self, text="next", \
+        command=partial(test_sup, +10), height=3, width=15)
+        self.but_next.grid(column=2, row=11)
+
+        self.but_prev=Button(self, text="previous", \
+        command=partial(test_sup, -10), height=3, width=15)
+        self.but_prev.grid(column=1, row=11)
+
+    
+    def showing_product(self, parent, prod_info):
+        """this function will display a new window.
+        This window will show current product, and
+        a substitute"""
+
+        fen=Toplevel(parent)
+        fen.title("product features")
+        # grab_set denies user to use main window while this 
+        # window is opened
+        fen.grab_set()
+
+        lab1 = LabelFrame(fen, text="Current product", padx=20, pady=20)
+        lab1.grid(ipadx=20, ipady=20)
+        fen.rowconfigure(0, weight=1)
+        fen.columnconfigure(0)
+
+        # adding text
+        for x in range(len(DISPLAY_INFO)):
+            # adding informations
+            lab=Label(lab1, text=DISPLAY_INFO[x],height=3, width=15)
+            lab.grid(column=0,row=x, sticky=W)
+            # adding product informations
+            jeanjean=Label(lab1, text=prod_info[x+1], height=3, width=75)
+            jeanjean.grid(column=1,row=x, sticky=E)
+
+
 
 if __name__=="__main__":
     fenetre=Tk()
+    fenetre.title("Smart food finder")
     app = Menu_Graphic(fenetre, USERNAME, PASSWORD)
     app.main_menu()
     app.mainloop()
