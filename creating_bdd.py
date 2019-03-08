@@ -6,6 +6,7 @@
 import pymysql
 import requests
 from conf import *
+from functions import *
 
 
 class BaseData (object):
@@ -54,7 +55,8 @@ class BaseData (object):
                 `url_ingredient` VARCHAR(250) NOT NULL,
                 `markets_for_product` VARCHAR(90) NULL,
                 `allergens` VARCHAR(255) NULL,
-                `nutrition_grades` VARCHAR(10) NULL,
+                `nutrition_grades` INT NULL,
+                `categories_hierarchy` TEXT NULL,
                 `category_id` INT UNSIGNED NOT NULL,
                 PRIMARY KEY (`id_products`),
                 INDEX `fk_category_id_idx` (`category_id` ASC),
@@ -65,11 +67,11 @@ class BaseData (object):
                   ON UPDATE NO ACTION)
                 ENGINE = InnoDB;""")
             
-            # CREATING table favorites within comparatif_alimentaire
+            # CREATING table Favorites within comparatif_alimentaire
             with self.connection.cursor() as cursor:
-                cursor.execute("""CREATE TABLE IF NOT EXISTS `comparatif_alimentaire`.`favorites` (
+                cursor.execute("""CREATE TABLE IF NOT EXISTS `comparatif_alimentaire`.`Favorites` (
                 `id_favorites` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-                `id_link_product` BIGINT UNSIGNED NOT NULL,
+                `id_link_product` BIGINT UNSIGNED UNIQUE NOT NULL,
                 PRIMARY KEY (`id_favorites`),
                 INDEX `fk_product_id_idx` (`id_link_product` ASC),
                 CONSTRAINT `fk_product_id`
@@ -119,7 +121,8 @@ class BaseData (object):
                             r["products"][t]["url"], 
                             r["products"][t]["purchase_places"],
                             r["products"][t]["allergens"], 
-                            r["products"][t]["nutrition_grades"], 
+                            replace_let(r["products"][t]["nutrition_grades"]),
+                            ",".join(r["products"][t]["categories_hierarchy"]),
                             x+1))
                             t+=1
                         # If product doesn't match if case
