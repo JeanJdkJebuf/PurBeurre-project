@@ -31,8 +31,7 @@ class BaseData (object):
             with self.connection.cursor() as cursor:
                 cursor.execute('DROP DATABASE IF EXISTS comparatif_alimentaire;')
                 self.connection.commit()
-            
-            
+
             # CREATING new database named comparatif_alimentaire
             with self.connection.cursor() as cursor:
                 cursor.execute("CREATE SCHEMA IF NOT EXISTS \
@@ -91,8 +90,9 @@ class BaseData (object):
         "this function takes some data from a website and\
         puts it into database"
 
-        # comparing products
-        compar = []    
+        # comparing products id
+        compar = []
+        compar_name = []
         # mark for products
         x = 0
         # each category will be implemented
@@ -104,16 +104,19 @@ class BaseData (object):
                 
                 # getting data for Products table
                 print("Collecting data...")
-                r=requests.get(SITE.format(CATEGORIES[x])).json()
+                r = requests.get(SITE.format(CATEGORIES[x])).json()
                 
-                #mark for each product
+                # mark for each product
                 t, y = 0, 1
                 data_product = []
                 # creating loop to collect specific datas
+                print("gathering informations...")
                 while y:
                     try:
                         if r["products"][t]["_id"] not in compar \
-                            and len(r["products"][t]["allergens"]) < 255:
+                            and r["products"][t]["product_name_fr"] not in \
+                            compar_name and len(r["products"][t]["allergens"]) < 255:
+                            compar_name.append(r["products"][t]["product_name_fr"])
                             compar.append(r["products"][t]["_id"])
                             data_product.append((r["products"][t]["_id"], 
                             r["products"][t]["product_name_fr"], 
