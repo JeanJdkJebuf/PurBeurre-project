@@ -140,9 +140,9 @@ class BaseData (object):
                         if t == 1000:
                             y = 0
                             break
-
+                print(data_product[0])
                 # putting collected data in database
-                print("Data loading... pass level {}".format(x+1))
+                print("Data loading... pass level {}/11".format(x+1))
                 cursor.execute(INSERT_REQ_PRODUCTS.format(','.join(str(v) for v in data_product))+";")
             self.connection.commit()
 

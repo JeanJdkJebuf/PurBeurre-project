@@ -8,6 +8,7 @@ import requests
 
 # Personnal mods
 from conf import *
+from functions import cut_str
 
 
 class Menu_Graphic(Frame):
@@ -17,7 +18,7 @@ class Menu_Graphic(Frame):
         Frame.__init__(self, parent)
         self.pack(fill=BOTH)
         self.parent = parent
-        
+
         # defining default data
         self.user = user
         self.passw = passw
@@ -31,13 +32,13 @@ class Menu_Graphic(Frame):
     def main_menu(self):
         # button that allows user to choose category
         self.button_cat = Button(self, text="Products",
-        command=partial(self.choose_category, self.parent), 
+        command=self.choose_category, 
         height=3, width=15)
         self.button_cat.grid(column=0,row=0,sticky=W+E+N+S)
 
         # button that allows user to choose favorites
         self.button_fav = Button(self, text="My favorites", \
-        command=partial(self.show_favorites), height=3,width=15)
+        command=self.show_favorites, height=3,width=15)
         self.button_fav.grid(column=0,row=1,sticky=W+E+N+S)
 
         # Button that makes you quit the program
@@ -53,7 +54,7 @@ class Menu_Graphic(Frame):
         self.canvas.create_image(112, 112, image=self.img)
 
     # this function will remove some widgets and add others
-    def choose_category(self, parent):
+    def choose_category(self):
         """This function displays categories"""
 
         # removing older widgets
@@ -75,12 +76,12 @@ class Menu_Graphic(Frame):
 
         # creating Categories Buttons
         for func in range(len(self.liste)):
-            self.liste[func]=Button(self, text=self.liste[func], command=partial(self.choose_product, self.parent, func+1),
+            self.liste[func]=Button(self, text=self.liste[func], command=partial(self.choose_product, func+1),
             height=3, width=15)
             self.liste[func].grid(column=0,row=func+1,sticky=W+E+N+S)
 
     # this function displays products by page
-    def choose_product(self, parent, category_number):
+    def choose_product(self, category_number):
         """This function displays products
         of category_number of Products in bd"""
 
@@ -106,17 +107,17 @@ class Menu_Graphic(Frame):
             self.list_products.append(row)
         
         #function to creates 10 products
-        self.creating_prod_button(self.parent,self.product_marker)
+        self.creating_prod_button(self.product_marker)
         #function that creates next and previous buttons
-        self.button_next(self.parent)
+        self.button_next()
 
         # Button that brings back to main menu
         self.button_quit=Button(self, text="Main menu", \
-        command=partial(self.back_to_menu ), height=3, width=10)
+        command=self.back_to_menu, height=3, width=10)
         self.button_quit.grid(column=0,row=11, sticky=W+E+N+S)
 
     # this function creates Buttons of certain products (x to x+10)
-    def creating_prod_button(self, parent, prod_mark):
+    def creating_prod_button(self, prod_mark):
         """this function creates Buttons from prod_mark
         to prod_mark+10 used for function choose_product"""
 
@@ -134,7 +135,7 @@ class Menu_Graphic(Frame):
             #converting product name and number into var
             var_number=self.list_products[x]
             #creating buttons
-            self.list_prod_name[x]=Button(self, text=self.list_prod_name[x],\
+            self.list_prod_name[x]=Button(self, text=cut_str(self.list_prod_name[x], 25, 1), \
             command=partial(self.showing_product, \
             self.parent, var_number), height=3, width=15)
             self.list_prod_name[x].grid(column=0, row=t, sticky=W+E+N+S)
@@ -142,7 +143,7 @@ class Menu_Graphic(Frame):
             t += 1
     
     #this button once clicked will show 10 next results
-    def button_next(self, parent):
+    def button_next(self):
         """This buttons will show 10 next or previous
         results if possible"""
 
@@ -155,7 +156,7 @@ class Menu_Graphic(Frame):
                 #updating self.product_marker
                 self.product_marker += number
                 #creating new widgets
-                self.creating_prod_button(self.parent,self.product_marker)
+                self.creating_prod_button(self.product_marker)
 
         self.but_next=Button(self, text="next", \
         command=partial(test_sup, +10), height=3, width=15)
@@ -231,7 +232,7 @@ class Menu_Graphic(Frame):
             lab=Label(lab1, text=DISPLAY_INFO[x],height=3, width=15)
             lab.grid(column=0,row=x, sticky=W)
             # adding product informations
-            jeanjean=Label(lab1, text=prod_info[x+1], height=3, width=75)
+            jeanjean=Label(lab1, text=cut_str(prod_info[x+1],70,0), height=3, width=75)
             jeanjean.grid(column=1,row=x, sticky=E)
         
         # adding text in lab2 (substitute)
@@ -241,7 +242,7 @@ class Menu_Graphic(Frame):
             lab.grid(column=0,row=x, sticky=W)
             # adding product informations
             try:
-                jeanjean=Label(lab2, text=substitute[0][x], height=3, width=75)
+                jeanjean=Label(lab2, text=cut_str(substitute[0][x],70,0), height=3, width=75)
                 jeanjean.grid(column=1,row=x, sticky=E)
             except:
                 # if there's no substitute, print that message
@@ -278,7 +279,7 @@ class Menu_Graphic(Frame):
             if x%mod_10 == mod_10 or not x%mod_10:
                 z+=1
                 y=0
-            Button(self, text= listefav[x][0], command=partial(self.showing_fav, \
+            Button(self, text= cut_str(listefav[x][0],25,1), command=partial(self.showing_fav, \
             self.parent, listefav[x]), height=3, \
             width=35).grid(column=z, row=y)
             y+=1
@@ -301,18 +302,10 @@ class Menu_Graphic(Frame):
             Label(lab1, text=DISPLAY_INFO[line], height=3, \
             width=35).grid(column=0, row=line, sticky=W)
 
-            Label(lab1, text=prod_info[line], height=3, \
+            Label(lab1, text=cut_str(prod_info[line],70,0), height=3, \
             width=155).grid(column=1, row=line, sticky=E)
 
 
 
 if __name__=="__main__":
-    fenetre=Tk()
-    fenetre.title("Smart food finder")
-    app = Menu_Graphic(fenetre, USERNAME, PASSWORD)
-    try:
-        app.main_menu()
-        app.mainloop()
-    finally:
-        app.connection.close()
-        fenetre.quit()
+    None

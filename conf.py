@@ -21,7 +21,7 @@ SITE = "https://world.openfoodfacts.org/cgi/search.pl?search_terms={}\
 
 # list of categories
 CATEGORIES = ["'viande'", "'poisson'", "'pates'", "'legumes'", "'gateau'",
- "'conserve'", "'fromage'"]
+ "'conserve'", "'fromage'", "'fruit'", "'dessert'", "'yaourt'", "'boisson'"]
 
 # insert categories request
 INSERT_REQ_CATEGORY = ("INSERT INTO Categories VALUES({}, {})")
