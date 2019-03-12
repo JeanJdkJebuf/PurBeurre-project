@@ -53,3 +53,29 @@ id_link_product=id_link_product")
 GETTING_FAV_DATA = ("SELECT product_name, ingredients, \
 url_ingredient, markets_for_product, allergens \
 FROM Products INNER JOIN Favorites ON Products.id_products = Favorites.id_link_product;")
+
+# text explaining main menu
+explain_menu = "\nThis application helps you finding substitutes\n \
+Press Products button to find products\n \
+Press My favorites to consult your substitutes \n \
+Have fun !\n" 
+
+# text explaining categories
+# \n is meant for indentations, to make program sexy
+expl_cat = "\n\nChoose a category to access \n \
+products corresponding to this category \n \
+\n Press main menu to return main page\n \n \n \n \n \n \n \n \n"
+
+# text showing user number of products
+show_num = "Product {} to {} (total : {})"
+
+expl_prod = "\n \n Choose a product to get \n \
+informations. You will have info regarding \n \
+that product , and a substitute. \n \
+You will be able to add it to \n \
+your favorites and consult it later on \n"
+
+expl_fav = "\n\n\n\n Choose a favorite to consult \n \
+ its informations, click on website link \n \
+ to get full informations on \n \
+ Open Food Facts website \n"
