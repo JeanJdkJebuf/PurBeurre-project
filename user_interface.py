@@ -196,28 +196,52 @@ class Menu_Graphic(Frame):
         for x in range(len(self.list_products)):
             self.list_prod_name.append(self.list_products[x][1])
 
-        # label that show user number of procuts
-        self.lab_show=Label(self.lpf, text=show_num.format(prod_mark+1, \
-        prod_mark+11, len(self.list_products)), padx=20, pady=20)
-        self.lab_show.grid(column=1, row=0)
         #marker for buttons rows
         t=1
         # loop creating product buttons
         y=0
-        for x in range(prod_mark, prod_mark+10):
-            #converting product name and number into var
-            var_number=self.list_products[x]
-            # algorithm to display informations on multiple columns
-            if not x % 5:
-                y+=1
-                t=1
-            #creating buttons
-            self.list_prod_name[x]=Button(self.lpf, text=cut_str(self.list_prod_name[x], 25, 1), \
-            command=partial(self.showing_product, \
-            self.parent, var_number), height=3, width=28)
-            self.list_prod_name[x].grid(column=y, row=t, sticky=W+E+N+S)
-            # increasing marker
-            t += 1
+        while True:
+            if prod_mark+10 > len(self.list_products):
+                # label that show user number of procuts
+                self.lab_show=Label(self.lpf, text=show_num.format(prod_mark+1, \
+                len(self.list_products)+1, len(self.list_products)+1), \
+                padx=20, pady=20)
+                self.lab_show.grid(column=1, row=0)
+                for x in range(prod_mark, len(self.list_products)):
+                    #converting product name into var
+                    var_number=self.list_products[x]
+                    # algorithm displaying informations on multiple columns
+                    if not x % 5:
+                        y+=1
+                        t=1
+                    #creating buttons
+                    self.list_prod_name[x]=Button(self.lpf, text=cut_str(self.list_prod_name[x], 25, 1), \
+                    command=partial(self.showing_product, \
+                    self.parent, var_number), height=3, width=28)
+                    self.list_prod_name[x].grid(column=y, row=t, sticky=W+E+N+S)
+                    # increasing marker
+                    t += 1
+                break
+            else:
+                # label that show user number of procuts
+                self.lab_show=Label(self.lpf, text=show_num.format(prod_mark+1, \
+                prod_mark+11, len(self.list_products)+1), padx=20, pady=20)
+                self.lab_show.grid(column=1, row=0)
+                for x in range(prod_mark, prod_mark+10):
+                    #converting product name into var
+                    var_number=self.list_products[x]
+                    # algorithm displaying informations on multiple columns
+                    if not x % 5:
+                        y+=1
+                        t=1
+                    #creating buttons
+                    self.list_prod_name[x]=Button(self.lpf, text=cut_str(self.list_prod_name[x], 25, 1), \
+                    command=partial(self.showing_product, \
+                    self.parent, var_number), height=3, width=28)
+                    self.list_prod_name[x].grid(column=y, row=t, sticky=W+E+N+S)
+                    # increasing marker
+                    t += 1
+                break
     
     #this button once clicked will show 10 next results
     def button_next(self):
@@ -258,8 +282,15 @@ class Menu_Graphic(Frame):
                 self.lpf.destroy()
                 self.but_next.destroy()
                 self.but_prev.destroy()
-                for x in range(self.product_marker, self.product_marker+10):
-                    self.list_prod_name[x].destroy()
+                while True:
+                    if self.product_marker+10>len(self.list_products):
+                        for x in range(self.product_marker, len(self.list_products)):
+                            self.list_prod_name[x].destroy()
+                        break
+                    else:
+                        for x in range(self.product_marker, self.product_marker+10):
+                            self.list_prod_name[x].destroy()
+                        break
                 self.lab_show.destroy()
                 self.pan1.destroy()
                 self.expl.destroy()
