@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*
 
+import webbrowser
 # functions for PurBeurre-project
 
 
@@ -47,3 +48,7 @@ def cut_str(line, number, cut):
             else:
                 replace_str += line[x]
     return replace_str
+
+def callback(event):
+    webbrowser.open_new(event.widget.cget("text"))
+

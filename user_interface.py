@@ -8,7 +8,7 @@ import requests
 
 # Personnal mods
 from conf import *
-from functions import cut_str
+from functions import cut_str, callback
 
 
 class Menu_Graphic(Frame):
@@ -108,9 +108,25 @@ class Menu_Graphic(Frame):
         self.expl.grid(column=1, row=1)
 
         # Back to main menu
-        self.button_quit_1=Button(self.p2, text="Main menu", command=self.back_to_menu, \
+        self.button_quit_1=Button(self.p2, text="Main menu", command=self.back_from_cat, \
         height=3, width=15)
         self.button_quit_1.grid(column=1, row=2, sticky=S+E)
+
+    #back to main menu, from products
+    def back_from_cat(self):
+        while True:
+            try:
+                self.l.destroy()
+                self.expl.destroy()
+                for func in range(len(self.liste)):
+                    self.liste[func].destroy()
+                self.canvas.destroy()
+                self.expl.destroy()
+                self.button_quit_1.destroy()
+                self.p2.destroy()
+            finally:
+                self.main_menu()
+                break
 
     def choose_product(self, category_number):
         """This function displays products
@@ -235,33 +251,24 @@ class Menu_Graphic(Frame):
 
     # this button destroys all widgets and calls main_menu()
     def back_to_menu(self):
-        #mark
-        x=1
-        while x:
+
+        while True:
             try:
-                self.l.destroy()
-                self.expl.destroy()
-                for func in range(len(self.liste)):
-                    self.liste[func].destroy()
-                self.canvas.destroy()
-                self.p2.destroy()
                 self.button_quit_1.destroy()
                 self.lpf.destroy()
                 self.but_next.destroy()
                 self.but_prev.destroy()
                 for x in range(self.product_marker, self.product_marker+10):
                     self.list_prod_name[x].destroy()
-                self.button_quit.destroy()
                 self.lab_show.destroy()
                 self.pan1.destroy()
-                self.lf.destroy()
-
-            except:
-                pass
+                self.expl.destroy()
+                self.canvas.destroy()
+                self.p2.destroy()             
             finally:
                 #calls main_menu
-                x=0
                 self.main_menu()
+                break
     
     def showing_product(self, parent, prod_info):
         """this function will display a new window.
@@ -298,6 +305,8 @@ class Menu_Graphic(Frame):
                     for row in cur:
                         substitute.append(row)
                 except:
+                    # if no substitutes found
+                    # rare error, will be fixed afterwards
                     pass
                 finally:
                     break
@@ -317,31 +326,51 @@ class Menu_Graphic(Frame):
             # adding informations
             lab=Label(lab1, text=DISPLAY_INFO[x],height=5, width=15)
             lab.grid(column=0,row=x, sticky=W)
-            # adding product informations
-            jeanjean=Label(lab1, text=cut_str(prod_info[x+1],70,0), height=5, width=75)
-            jeanjean.grid(column=1,row=x, sticky=E)
+
+        Label(lab1, text=cut_str(prod_info[1], 70, 0), height=4, \
+        width=75).grid(column=1, row=0, sticky=E)
+        Label(lab1, text=cut_str(prod_info[2], 70, 0), height=4, \
+        width=75).grid(column=1, row=1, sticky=E)
+        link=Label(lab1, text=cut_str(prod_info[3], 70, 0), height=4, \
+        width=75, fg="blue", cursor="hand2")
+        link.grid(column=1, row=2, sticky=E)
+        link.bind("<Button-1>", callback)
+        Label(lab1, text=cut_str(prod_info[4], 70, 0), height=4, \
+        width=75).grid(column=1, row=3, sticky=E)
+        Label(lab1, text=cut_str(prod_info[5], 70, 0), height=4, \
+        width=75).grid(column=1, row=4, sticky=E)
         
         # adding text in lab2 (substitute)
         for x in range(len(DISPLAY_INFO)):
             # adding informations
             lab=Label(lab2, text=DISPLAY_INFO[x],height=3, width=15)
             lab.grid(column=0,row=x, sticky=W)
-            # adding product informations
-            try:
-                jeanjean=Label(lab2, text=cut_str(substitute[0][x],70,0), height=5, width=75)
-                jeanjean.grid(column=1,row=x, sticky=E)
+        while True:
+            try: 
+                Label(lab2, text=cut_str(substitute[0][0], 70, 0), height=4, \
+                width=75).grid(column=1, row=0, sticky=E)
+                Label(lab2, text=cut_str(substitute[0][1], 70, 0), height=4, \
+                width=75).grid(column=1, row=1, sticky=E)
+                link=Label(lab2, text=cut_str(substitute[0][2], 70, 0), height=4, \
+                width=75, fg="blue", cursor="hand2")
+                link.grid(column=1, row=2, sticky=E)
+                link.bind("<Button-1>", callback)
+                Label(lab2, text=cut_str(substitute[0][3], 70, 0), height=4, \
+                width=75).grid(column=1, row=3, sticky=E)
+                Label(lab2, text=cut_str(substitute[0][4], 70, 0), height=4, \
+                width=75).grid(column=1, row=4, sticky=E)
             except:
                 # if there's no substitute, print that message
                 if not substitute:
                     error_msg=Label(lab2, text="No substitute found",
                     height=3, width=75)
-                    error_msg.grid(column=1,row=x,sticky=E)
+                    error_msg.grid(column=1,row=0,sticky=E)
             finally:
-                pass
-        button_substitute=Button(lab2, text="Add to favorites", \
-            command=partial(add_to_favorites, substitute[0][5]),
-        height=1, width=15)
-        button_substitute.grid(column=1, row=5)
+                button_substitute=Button(lab2, text="Add to favorites", \
+                command=partial(add_to_favorites, substitute[0][5]),
+                height=1, width=15)
+                button_substitute.grid(column=1, row=5)
+                break
 
     def show_favorites(self):
         """this function shows Favorites"""
@@ -367,8 +396,8 @@ class Menu_Graphic(Frame):
             self.name_fav.append(x[0])
 
         #adding a LabelFrame to display list of favorites in it
-        self.lf = LabelFrame(self, text="Favorites")
-        self.lf.grid(column=0, row=0)
+        self.lfpf = LabelFrame(self, text="Favorites")
+        self.lfpf.grid(column=0, row=0)
         # adding buttons
         # adding a marker to display buttons over columns (10by column)
         z, y, mod_10 = 0, 0, 10 # z is for columns, x for rows
@@ -376,26 +405,48 @@ class Menu_Graphic(Frame):
             if x%mod_10 == mod_10 or not x%mod_10:
                 z+=1
                 y=0
-            self.name_fav[x]=Button(self.lf, text= cut_str(self.listefav[x][0],25,1), \
+            self.name_fav[x]=Button(self.lfpf, text= cut_str(self.listefav[x][0],25,1), \
             command=partial(self.showing_fav, \
             self.parent, self.listefav[x]), height=2, \
             width=28)
             self.name_fav[x].grid(column=z, row=y)
             y+=1
         # Paned window to display informations with a good layout
-        self.p2 = PanedWindow(self, orient=VERTICAL)
-        self.p2.grid(column=1, row=0, sticky=N+S+E+W)
+        self.p22 = PanedWindow(self, orient=VERTICAL)
+        self.p22.grid(column=1, row=0, sticky=N+S+E+W)
 
         # canvas displaying open food fact logo
-        self.canvas = Canvas(self.p2, width=110, height=110)
-        self.canvas.grid(column=1, row=0, sticky=N+E)
+        self.canvas2 = Canvas(self.p22, width=110, height=110)
+        self.canvas2.grid(column=1, row=0, sticky=N+E)
         self.img = PhotoImage(file='ressources/open_mini.png')
-        self.canvas.create_image(55, 55, image=self.img)
+        self.canvas2.create_image(55, 55, image=self.img)
 
         # Explanation text
-        self.expl = Label(self.p2, text= expl_fav)
-        self.expl.grid(column=1, row=1)
+        self.expl2 = Label(self.p22, text= expl_fav)
+        self.expl2.grid(column=1, row=1)
+
+        self.button_quit_2=Button(self.p22, text="Main menu", command=self.back_from_fav, \
+        height=3, width=15)
+        self.button_quit_2.grid(column=1, row=2, sticky=S+E)
     
+    # back to main menu (show_favorites func)
+    def back_from_fav(self):
+        
+        while True:
+            try:
+                for x in range(len(self.listefav)):
+                            self.name_fav[x].destroy()
+                self.lfpf.destroy()
+                self.p22.destroy()
+                self.canvas2.destroy()
+                self.expl2.destroy()
+                self.button_quit_2.destroy()
+            finally:
+                #calls main_menu
+                    self.main_menu()
+                    break
+                    
+
     def showing_fav(self, parent, prod_info):
         """Displaying new window, showing substitute"""
 
@@ -414,11 +465,21 @@ class Menu_Graphic(Frame):
             Label(lab1, text=DISPLAY_INFO[line], height=3, \
             width=35).grid(column=0, row=line, sticky=W)
 
-            Label(lab1, text=cut_str(prod_info[line],70,0), height=4, \
-            width=75).grid(column=1, row=line, sticky=E)
+        Label(lab1, text=cut_str(prod_info[0], 70, 0), height=4, \
+        width=75).grid(column=1, row=0, sticky=E)
+        Label(lab1, text=cut_str(prod_info[1], 70, 0), height=4, \
+        width=75).grid(column=1, row=1, sticky=E)
+        link=Label(lab1, text=cut_str(prod_info[2], 70, 0), height=4, \
+        width=75, fg="blue", cursor="hand2")
+        link.grid(column=1, row=2, sticky=E)
+        link.bind("<Button-1>", callback)
+        Label(lab1, text=cut_str(prod_info[3], 70, 0), height=4, \
+        width=75).grid(column=1, row=3, sticky=E)
+        Label(lab1, text=cut_str(prod_info[4], 70, 0), height=4, \
+        width=75).grid(column=1, row=4, sticky=E)
 
 
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     None

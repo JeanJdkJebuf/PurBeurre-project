@@ -1,1 +1,6 @@
-PyMySQL==0.9.3
+pymysql
+webbrowser
+functools
+requests
+webbrowser
+

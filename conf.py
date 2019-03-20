@@ -76,6 +76,8 @@ You will be able to add it to \n \
 your favorites and consult it later on \n"
 
 expl_fav = "\n\n\n\n Choose a favorite to consult \n \
- its informations, click on website link \n \
+ its informations \n\n\
+ Click on website link \n \
  to get full informations on \n \
- Open Food Facts website \n"
+ Open Food Facts website \
+\n\n\n\n\n\n\n\n\n\n\n"
