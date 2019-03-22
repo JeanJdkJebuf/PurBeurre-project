@@ -8,8 +8,8 @@
 # User informations
 ##############################################
 
-USERNAME = "guillaume"
-PASSWORD = "4151ergIUzed26er"
+USERNAME = ""
+PASSWORD = ""
 
 ##############################################
 # string and lists used for database
