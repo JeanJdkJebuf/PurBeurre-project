@@ -33,13 +33,13 @@ class Menu_Graphic(Frame):
         self.p = PanedWindow(self, orient=VERTICAL)
         self.p.pack(side=LEFT, expand=Y, fill=BOTH, pady=2, padx=2)
         # button that allows user to choose category
-        self.button_cat = Button(self.p, text="Products",
+        self.button_cat = Button(self.p, text="Produits",
         command=self.choose_category, 
         height=3, width=15)
         self.button_cat.pack()
 
         # button that allows user to choose favorites
-        self.button_fav = Button(self.p, text="My favorites", \
+        self.button_fav = Button(self.p, text="Mes favoris", \
         command=self.show_favorites, height=3,width=15)
         self.button_fav.pack()
 
@@ -54,7 +54,7 @@ class Menu_Graphic(Frame):
         self.lab1.pack()
 
         # Button that makes you quit the program
-        self.button_quit = Button(self.p, text="Quit", command=self.quit,
+        self.button_quit = Button(self.p, text="Quitter", command=self.quit,
         height=3,width=15)
         self.button_quit.pack(side=BOTTOM)
 
@@ -108,7 +108,7 @@ class Menu_Graphic(Frame):
         self.expl.grid(column=1, row=1)
 
         # Back to main menu
-        self.button_quit_1=Button(self.p2, text="Main menu", command=self.back_from_cat, \
+        self.button_quit_1=Button(self.p2, text="Menu principal", command=self.back_from_cat, \
         height=3, width=15)
         self.button_quit_1.grid(column=1, row=2, sticky=S+E)
 
@@ -157,7 +157,7 @@ class Menu_Graphic(Frame):
             self.list_products.append(row)
         
         # LabelFrame that will include products
-        self.lpf = LabelFrame(self, text="Products")
+        self.lpf = LabelFrame(self, text="Produits")
         self.lpf.grid(column=0, row=1)
 
         #function to creates 10 products and display marks
@@ -180,7 +180,7 @@ class Menu_Graphic(Frame):
         self.expl.grid(column=0, row=1)
 
         # Back to main menu
-        self.button_quit_1=Button(self, text="Main menu", command=self.back_to_menu, \
+        self.button_quit_1=Button(self, text="Menu principal", command=self.back_to_menu, \
         height=3, width=15)
         self.button_quit_1.grid(column=1, row=2, sticky=S+E)
 
@@ -265,11 +265,11 @@ class Menu_Graphic(Frame):
         self.pan1 = PanedWindow(self, orient=HORIZONTAL)
         self.pan1.grid(column=0, row=2)
 
-        self.but_next=Button(self.pan1, text="next", \
+        self.but_next=Button(self.pan1, text="suivant", \
         command=partial(test_sup, +10), height=3, width=15)
         self.but_next.grid(column=1, row=0, sticky=W+E+N+S)
 
-        self.but_prev=Button(self.pan1, text="previous", \
+        self.but_prev=Button(self.pan1, text="précédent", \
         command=partial(test_sup, -10), height=3, width=15)
         self.but_prev.grid(column=0, row=0, sticky=W+E+N+S)
 
@@ -313,11 +313,11 @@ class Menu_Graphic(Frame):
         fen.grab_set()
 
         # first frame, displaying current product
-        lab1 = LabelFrame(fen, text="Current product", padx=10, pady=10)
+        lab1 = LabelFrame(fen, text="Description produit", padx=10, pady=10)
         lab1.grid(ipadx=10, ipady=10,column=0,row=0)
 
         # second frame, displaying substitute
-        lab2 = LabelFrame(fen, text="substitute", padx=10, pady=10)
+        lab2 = LabelFrame(fen, text="substitut proposé", padx=10, pady=10)
         lab2.grid(ipadx=10, ipady=10,column=0,row=1)
 
 
@@ -427,7 +427,7 @@ class Menu_Graphic(Frame):
             self.name_fav.append(x[0])
 
         #adding a LabelFrame to display list of favorites in it
-        self.lfpf = LabelFrame(self, text="Favorites")
+        self.lfpf = LabelFrame(self, text="Favoris")
         self.lfpf.grid(column=0, row=0)
         # adding buttons
         # adding a marker to display buttons over columns (10by column)
@@ -456,7 +456,7 @@ class Menu_Graphic(Frame):
         self.expl2 = Label(self.p22, text= expl_fav)
         self.expl2.grid(column=1, row=1)
 
-        self.button_quit_2=Button(self.p22, text="Main menu", command=self.back_from_fav, \
+        self.button_quit_2=Button(self.p22, text="Menu principal", command=self.back_from_fav, \
         height=3, width=15)
         self.button_quit_2.grid(column=1, row=2, sticky=S+E)
     
