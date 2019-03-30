@@ -5,10 +5,13 @@ from tkinter import *
 from functools import partial
 import pymysql
 import requests
+from functions import cut_str, callback
 
 # Personnal mods
 from conf import *
-from functions import cut_str, callback
+from dao import *
+from text import *
+
 
 
 class Menu_Graphic(Frame):
